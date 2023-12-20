@@ -4,7 +4,7 @@ import ArrowIcon2 from "../../assets/Arrow-3.svg";
 import UploadImg from '../../assets/folder-add.png'
 import InputGroup from '../../components/InputGroup';
 import TextAreaGroup from '../../components/TextAreaGroup';
-import MultiSelectDropdown from '../../components/Multiselectdropdown';
+import MultiSelectDropdown from '../../components/MultiSelectDropdown';
 
 
 const CreateBlog = () => {

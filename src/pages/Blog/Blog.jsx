@@ -30,8 +30,6 @@ const Blog = () => {
       setCurrentIndex(swiper.activeIndex);
     };
 
-    console.log(currentIndex);
-
     const carouselItems = [
       {
         name: "Item 1",
@@ -53,29 +51,7 @@ const Blog = () => {
         announcement: "Announcement 1",
         description: "Description 1",
         img: NatureImg,
-      },
-      {
-        name: "Item 1",
-        date: "Date 1",
-        announcement: "Announcement 1",
-        description: "Description 1",
-        img: NatureImg,
-      },
-
-      {
-        name: "Item 1",
-        date: "Date 1",
-        announcement: "Announcement 1",
-        description: "Description 1",
-        img: NatureImg,
-      },
-      {
-        name: "Item 1",
-        date: "Date 1",
-        announcement: "Announcement 1",
-        description: "Description 1",
-        img: NatureImg,
-      },
+      }
     ];
 
   return (
