@@ -26,7 +26,7 @@ const Home = () => {
         },
         {
           headers: {
-            Authorization: `Bearer${"06c849e6edaa8a40645ce20d6918e3815b03cffe83472ce974b896837bc18b1e"}`,
+            Authorization: `Bearer${"7a2b6b3d3f9a5370396c63aebe6118f45bd44e89337ae5206457b71256c5c1a5"}`,
           },
         }
       );
