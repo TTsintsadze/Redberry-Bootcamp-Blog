@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ArrowDownIcon from "../assets/Vector.png";
 import CategoryButton from "./CategoryButton";
+import { useGlobalContext } from "../context/Context";
 import axios from "axios";
 
 const MultiSelectDropdown = ({
@@ -14,7 +15,9 @@ const MultiSelectDropdown = ({
     const [selectedOption, setSelectedOption] = useState(value);
     const [isOpen, setIsOpen] = useState(false);
     const [categories, setCategories] = useState([]);
-    const [selectedOptions, setSelectedOptions] = useState([]);
+    const { info, setStore } = useGlobalContext();
+    const [selectedOptions, setSelectedOptions] = useState(info.categories || []);
+    const [newCategories, setNewCategories] = useState(info.categories);
 
     const handleToggle = () => {
         setIsOpen(!isOpen);
@@ -36,7 +39,6 @@ const MultiSelectDropdown = ({
         fetchData();
     }, []);
 
-    console.log(categories);
     const handleSelect = (option) => {
         setSelectedOption(option.label);
         if (handleChange) {
@@ -51,10 +53,35 @@ const MultiSelectDropdown = ({
         transition: "max-height 0.3s ease-in-out, opacity 0.3s ease-in-out",
     };
 
+    const handleOptionClick = (option) => {
+        if (!selectedOptions.includes(option)) {
+          setSelectedOptions([...selectedOptions, option]);
+          setStore((prevInfo) => ({
+            ...prevInfo,
+            categories: [...prevInfo.categories, option],
+          }));
+        }
+      };
 
+    const containerRef = useRef(null);
+    const [startX, setStartX] = useState(null);
+    const [scrollLeft, setScrollLeft] = useState(0);
 
+    const handleTouchStart = (e) => {
+      setStartX(e.touches[0].clientX);
+      setScrollLeft(containerRef.current.scrollLeft);
+    };
 
-    console.log(selectedOptions);
+    const handleTouchMove = (e) => {
+      if (!startX) return;
+      const x = e.touches[0].clientX;
+      const distance = x - startX;
+      containerRef.current.scrollLeft = scrollLeft - distance;
+    };
+
+    const handleTouchEnd = () => {
+      setStartX(null);
+    };
 
     return (
         <div
@@ -70,10 +97,30 @@ const MultiSelectDropdown = ({
                 className={`bg-white flex items-center cursor-pointer justify-between`}
                 onClick={handleToggle}
             >
-                {value ? (
-                    <h1 className="font-medium">{value}</h1>
+                {selectedOptions.length > 0 ? (
+                <div
+                    ref={containerRef}
+                    className="flex items-center overflow-x-auto max-w-[300px] gap-3"
+                    style={{
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
+                    overflow: "hidden",
+                    }}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                >
+                    {selectedOptions.map((option, index) => (
+                    <CategoryButton
+                        key={index}
+                        text={option.title}
+                        bgColor={option.background_color}
+                        textColor={option.text_color}
+                    />
+                    ))}
+                </div>
                 ) : (
-                    <h1 className="font-medium">აირჩიე კატეგორია</h1>
+                <h1 className="font-medium">აირჩიე კატეგორია</h1>
                 )}
                 <img
                     src={ArrowDownIcon}
@@ -99,7 +146,7 @@ const MultiSelectDropdown = ({
                 className="flex flex-wrap px-2 gap-2 py-2 mt-1 scroll-container"
             >
                 {categories.map((option) => (
-                    <div >
+                    <div onClick={() => handleOptionClick(option)}>
                         <CategoryButton
                             text={option.title}
                             bgColor={option.background_color}

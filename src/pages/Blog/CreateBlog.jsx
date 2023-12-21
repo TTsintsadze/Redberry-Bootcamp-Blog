@@ -5,6 +5,7 @@ import UploadImg from '../../assets/folder-add.png'
 import InputGroup from '../../components/InputGroup';
 import TextAreaGroup from '../../components/TextAreaGroup';
 import MultiSelectDropdown from '../../components/MultiSelectDropdown';
+import { useGlobalContext } from '../../context/Context';
 
 
 const CreateBlog = () => {
@@ -20,7 +21,16 @@ const CreateBlog = () => {
         { label: "მიდლ HR", id: 9, team_id: 3 },
         { label: "სენიორ HR", id: 10, team_id: 3 },
     ];
-
+    const handleTextInputChange = (e) => {
+        const { value, name } = e.target;
+   
+        setStore((prevInfo) => ({
+          ...prevInfo,
+          [name]: value,
+        }));
+      };
+   
+    const {info, setStore} = useGlobalContext();
     const handleSelect = (selectedOption, field) => {
         setStore((formData) => ({
             ...formData,
@@ -65,14 +75,20 @@ const CreateBlog = () => {
                                 <InputGroup
                                     label="ავტორი *"
                                     type="text"
-                                    name="firstname"
+                                    name="author"
+                                    placeholder="შეიყვნეთ ავტორი"
                                     hint="მინიმუმ 2 სიმბოლო, ქართული ასოები"
+                                    value={info.author}
+                                    changeHandler={handleTextInputChange}
                                 />
                                 <InputGroup
                                     label="სათაური *"
                                     type="text"
-                                    name="lastname"
+                                    name="title"
+                                    placeholder="შეიყვნეთ სათაური"
                                     hint="მინიმუმ 2 სიმბოლო, ქართული ასოები"
+                                    value={info.title}
+                                    changeHandler={handleTextInputChange}
                                 />
                             </div>
                             <TextAreaGroup
@@ -80,12 +96,16 @@ const CreateBlog = () => {
                                 label="აღწერა *"
                                 placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
                                 hint="მინიმუმ 4 სიმბოლო, ქართული ასოები"
+                                value={info.description}
+                                changeHandler={handleTextInputChange}
                             />
                         <div className="flex gap-8 items-center">
                             <InputGroup
                             label="გამოქვეყნების თარიღი *"
                             type="date"
                             name="publish_date"
+                            value={info.publish_date}
+                            changeHandler={handleTextInputChange}
                             />
                             <div className="flex flex-col gap-3 w-full pb-3">
                                 <p className={`font-bold text-[14px] text-[#1A1A1F] `} >
@@ -103,8 +123,11 @@ const CreateBlog = () => {
                             <InputGroup
                                 label="ელ-ფოსტა"
                                 type="text"
-                                name="lastname"
+                                name="email"
+                                placeholder="Example@redberry.ge"
                                 hint="მეილი უნდა მთავრდებოდეს @redberry.ge-ით"
+                                value={info.email}
+                                changeHandler={handleTextInputChange}
                             />
                             <div className='flex justify-end'>
                                 <button className="bg-[#adadad] rounded-md text-white px-10 py-3">გამოქვეყნება</button>

@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'FiraGO';
+    src: url('path/to/FiraGO-Regular.woff2') format('woff2'), 
+         url('path/to/FiraGO-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
 .scroll-container {
     max-height: auto;
     overflow-y: auto;
