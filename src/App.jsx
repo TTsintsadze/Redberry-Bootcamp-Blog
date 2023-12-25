@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import './App.css'
 import axios from 'axios'
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import Home from './pages/home/Home';
-import Blog from './pages/Blog/Blog';
+import Blog from './pages/blog/Blog';
 import CreateBlog from './pages/Blog/CreateBlog';
 import { AppProvider } from './context/Context.jsx'
 import NotFound from './pages/notFound/NotFound';
