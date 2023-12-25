@@ -31,14 +31,15 @@ const Home = () => {
         }
       );
       console.log("Login successful:", response);
+      if (response.status === 204) {
+        setError("valid");
+      } else {
+        setError("invalid");
+      }
       return response.data;
     } catch (error) {
       console.error("Error during login:", error.response);
-      if (error.response && error.response.status === 422) {
-        setError(true);
-      } else {
-        setError(false);
-      }
+      setError("invalid");
     }
   };
 
@@ -87,11 +88,10 @@ const Home = () => {
             <button
                   type="button"
                   className="bg-[#5D37F3] rounded-xl w-full text-white py-[12px]"
-                  onClick={() => loginUser(email)}
-                >
+                  onClick={() => loginUser(email)} >
                   შესვლა
                 </button>
-              </form>
+                </form>
             </motion.div>
           ) : error === "valid" ? (
             <motion.div

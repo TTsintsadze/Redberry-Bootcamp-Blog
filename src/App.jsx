@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from './pages/home/Home';
 import Blog from './pages/Blog/Blog';
 import CreateBlog from './pages/Blog/CreateBlog';
+import { AppProvider } from './context/Context.jsx'
 
 function App() {
 
@@ -19,7 +20,7 @@ function App() {
       </Router>
     </>
 
-  )
+  );
 }
 
 export default App

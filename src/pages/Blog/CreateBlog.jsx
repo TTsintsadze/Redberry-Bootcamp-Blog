@@ -6,46 +6,58 @@ import InputGroup from '../../components/InputGroup';
 import TextAreaGroup from '../../components/TextAreaGroup';
 import MultiSelectDropdown from '../../components/MultiSelectDropdown';
 import { useGlobalContext } from '../../context/Context';
+import { ValidateBlog } from '../../validation/validation';
 
 
 const CreateBlog = () => {
-    const positions = [
-        { label: "ჯუნიორ დეველოპერი", id: 1, team_id: 1 },
-        { label: "მიდლ დეველოპერი", id: 2, team_id: 1 },
-        { label: "სენიორ დეველოპერი", id: 3, team_id: 1 },
-        { label: "ლიდდეველოპერი", id: 4, team_id: 1 },
-        { label: "ჯუნიორ დიზაინერი", id: 5, team_id: 2 },
-        { label: "მიდლ დიზაინერი", id: 6, team_id: 2 },
-        { label: "ჯუნიორ დიზაინერი", id: 7, team_id: 2 },
-        { label: "ჯუნიო HR", id: 8, team_id: 3 },
-        { label: "მიდლ HR", id: 9, team_id: 3 },
-        { label: "სენიორ HR", id: 10, team_id: 3 },
-    ];
+    const { info, setStore, setValidationErrors, validationErrors } =
+      useGlobalContext();
+      
     const handleTextInputChange = (e) => {
         const { value, name } = e.target;
+
+        let formattedValue = value;
+
+        const updatedInfo = {
+          ...info,
+          [name]: formattedValue,
+        };
+   
+       const errors = ValidateBlog(updatedInfo);
    
         setStore((prevInfo) => ({
           ...prevInfo,
           [name]: value,
         }));
+
+        setValidationErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: errors[name],
+          }));
       };
-   
-    const {info, setStore} = useGlobalContext();
+
     const handleSelect = (selectedOption, field) => {
         setStore((formData) => ({
             ...formData,
             [field]: selectedOption,
         }));
     };
+    const validateForm = () => {
+        const errors = ValidateBlog(info);
+      };
+  
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        validateForm();
+      };
+
     return (
         <div className="min-w-[1920px] min-h-[1080px] bg-[#E4E3EB] flex flex-col gap-12">
             <div className="flex items-center justify-center bg-white px-24 py-8">
                 <img src={RedberryLogo} />
             </div>
             <div className="px-24 py-8 flex">
-                <button
-                    className={`bg-[#FFFFFF] h-[44px] w-[44px] rounded-full flex items-center justify-center`}
-                >
+                <button className={`bg-[#FFFFFF] h-[44px] w-[44px] rounded-full flex items-center justify-center`} >
                     <img src={ArrowIcon2} />
                 </button>
                 <div className="w-full justify-center flex">
@@ -53,7 +65,7 @@ const CreateBlog = () => {
                         <h1 className="font-bold text-[30px] leading-[45px]">
                             ბლოგის დამატება
                         </h1>
-                        <form className='flex flex-col gap-6'>
+                        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
                             <div className="flex flex-col gap-3">
                                 <p className="font-medium leading-[20px]">ატვირთეთ ფოტო</p>
                                 <div className="relative cursor-pointer w-full bg-[#F4F3FF] border-[2px] border-dashed border-[#85858D] rounded-xl justify-center flex flex-col items-center gap-6 h-[180px]">
@@ -64,31 +76,87 @@ const CreateBlog = () => {
                                     />
                                     <div className="flex flex-col items-center w-full">
                                         <img src={UploadImg} />
-                                        <div class="flex gap-1">
+                                        <div className="flex gap-1">
                                             <p>ჩააგდეთ ფაილი აქ ან </p>
-                                            <p class="font-medium underline"> აირჩიეთ ფაილი</p>
+                                            <p className="font-medium underline"> აირჩიეთ ფაილი</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="flex gap-8 items-center">
-                                <InputGroup
-                                    label="ავტორი *"
-                                    type="text"
-                                    name="author"
-                                    placeholder="შეიყვნეთ ავტორი"
-                                    hint="მინიმუმ 2 სიმბოლო, ქართული ასოები"
-                                    value={info.author}
-                                    changeHandler={handleTextInputChange}
-                                />
+                            <div className="flex flex-col gap-3 w-full ">
+                                    <label
+                                        className={`font-bold text-[14px] text-[#1A1A1F] ${
+                                        validationErrors.author == "invalid" ? "text-red-500" : ""
+                                        } md:text-[16px]`}
+                                    >
+                                        ავტორი *
+                                    </label>
+                                    <div className="w-full relative">
+                                        <input
+                                        type="text"
+                                        name="author"
+                                        value={info.author}
+                                        className={`w-full border-[2px] ${
+                                            Object.values(validationErrors.author).some(
+                                            (error) => error === "invalid"
+                                            )
+                                            ? "border-red-500"
+                                            : Object.values(validationErrors.author).every(
+                                                (error) => error === "valid"
+                                                )
+                                            ? "border-green-500"
+                                            : "#c3c2c8"
+                                        } border-[#c3c2c8] rounded-2xl px-[15px] py-[16px] outline-none`}
+                                        onChange={handleTextInputChange}
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <p
+                                        className={`font-small text-[13px] ${
+                                            validationErrors.author.tooShort === "invalid"
+                                            ? "text-red-500"
+                                            : validationErrors.author.tooShort === "valid"
+                                            ? "text-green-500"
+                                            : "text-[#85858D]"
+                                        } md:text-15px`}
+                                        >
+                                        მინიმუმ 4 სიმბოლო
+                                        </p>
+                                        <p
+                                        className={`font-small text-[13px] ${
+                                            validationErrors.author.twoWord === "invalid"
+                                            ? "text-red-500"
+                                            : validationErrors.author.twoWord === "valid"
+                                            ? "text-green-500"
+                                            : "text-[#85858D]"
+                                        } md:text-15px`}
+                                        >
+                                        მინიმუმ ორი სიტყვა
+                                        </p>
+
+                                        <p
+                                        className={`font-small text-[13px] ${
+                                            validationErrors.author.georgianChars === "invalid"
+                                            ? "text-red-500"
+                                            : validationErrors.author.georgianChars === "valid"
+                                            ? "text-green-500"
+                                            : "text-[#85858D]"
+                                        } md:text-15px`}
+                                        >
+                                        მხოლოდ ქართული სიმბოლოები
+                                        </p>
+                                    </div>
+                                    </div>
                                 <InputGroup
                                     label="სათაური *"
                                     type="text"
                                     name="title"
                                     placeholder="შეიყვნეთ სათაური"
-                                    hint="მინიმუმ 2 სიმბოლო, ქართული ასოები"
+                                    hint="მინიმუმ 2 სიმბოლო"
                                     value={info.title}
                                     changeHandler={handleTextInputChange}
+                                    validation={validationErrors?.description}
                                 />
                             </div>
                             <TextAreaGroup
@@ -98,6 +166,7 @@ const CreateBlog = () => {
                                 hint="მინიმუმ 4 სიმბოლო, ქართული ასოები"
                                 value={info.description}
                                 changeHandler={handleTextInputChange}
+                                isValid={validationErrors.publish_date}
                             />
                         <div className="flex gap-8 items-center">
                             <InputGroup
@@ -112,7 +181,6 @@ const CreateBlog = () => {
                                     კატეგორია
                                 </p>
                                 <MultiSelectDropdown
-                                    options={positions}
                                     label="პოზიცია"
                                     handleChange={(selectedOption) =>
                                         handleSelect(selectedOption, "position")
@@ -128,9 +196,12 @@ const CreateBlog = () => {
                                 hint="მეილი უნდა მთავრდებოდეს @redberry.ge-ით"
                                 value={info.email}
                                 changeHandler={handleTextInputChange}
+                                isValid={validationErrors.email}
                             />
                             <div className='flex justify-end'>
-                                <button className="bg-[#adadad] rounded-md text-white px-10 py-3">გამოქვეყნება</button>
+                            <button
+                                className="bg-[#adadad] rounded-md text-white px-10 py-3"
+                                type="submit">გამოქვეყნება</button>
                             </div>
                         </form>
                     </div>

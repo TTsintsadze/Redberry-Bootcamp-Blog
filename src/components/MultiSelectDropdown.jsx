@@ -132,29 +132,29 @@ const MultiSelectDropdown = ({
                 />
             </div>
             <ul
-                style={{
-                    ...dropdownStyles,
-                    position: "absolute",
-                    width: "100%",
-                    left: 0,
-                    top: "100%",
-                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                    borderRadius: "8px 8px 8px 8px",
-                    zIndex: 30,
-                    backgroundColor: "white",
-                }}
-                className="flex flex-wrap px-2 gap-2 py-2 mt-1 scroll-container"
-            >
-                {categories.map((option) => (
-                    <div onClick={() => handleOptionClick(option)}>
-                        <CategoryButton
-                            text={option.title}
-                            bgColor={option.background_color}
-                            textColor={option.text_color}
-                        />
-                    </div>
-                ))}
-            </ul>
+    style={{
+        ...dropdownStyles,
+        position: "absolute",
+        width: "100%",
+        left: 0,
+        top: "100%",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        borderRadius: "8px 8px 8px 8px",
+        zIndex: 30,
+        backgroundColor: "white",
+    }}
+    className="flex flex-wrap px-2 gap-2 py-2 mt-1 scroll-container"
+>
+    {categories.map((option) => (
+        <div key={option.id} onClick={() => handleOptionClick(option)}>
+            <CategoryButton
+                text={option.title}
+                bgColor={option.background_color}
+                textColor={option.text_color}
+            />
+        </div>
+    ))}
+</ul>
         </div>
     );
 };
