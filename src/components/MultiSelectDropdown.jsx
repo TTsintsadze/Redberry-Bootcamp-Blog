@@ -1,53 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import ArrowDownIcon from "../assets/Vector.png";
 import CategoryButton from "./CategoryButton";
 import { useGlobalContext } from "../context/Context";
 import { ValidateBlog } from "../validation/validation";
 import DeleteIcon from "../assets/delete_icon.png";
-import axios from "axios";
 
 const MultiSelectDropdown = ({
-    label,
-    options,
-    value,
     className = "",
-    handleChange,
     isValid,
 }) => {
-    const [selectedOption, setSelectedOption] = useState(value);
+
     const [isOpen, setIsOpen] = useState(false);
     const [categories, setCategories] = useState([]);
     const { info, setStore } = useGlobalContext();
     const [selectedOptions, setSelectedOptions] = useState(info.categories || []);
-    const [newCategories, setNewCategories] = useState(info.categories);
 
 
     const handleToggle = () => {
         setIsOpen(!isOpen);
-    };
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(
-                    "https://api.blog.redberryinternship.ge/api/categories"
-                );
-                console.log(response.data.data);
-                setCategories(response.data.data);
-            } catch (error) {
-                console.error("Error fetching data: ", error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    const handleSelect = (option) => {
-        setSelectedOption(option.label);
-        if (handleChange) {
-            handleChange(option);
-        }
-        setIsOpen(false);
     };
 
     const dropdownStyles = {
@@ -126,7 +96,7 @@ const MultiSelectDropdown = ({
                 {selectedOptions.length > 0 ? (
                 <div
                     ref={containerRef}
-                    className="flex items-center overflow-x-auto max-w-[300px] gap-3"
+                    className="flex items-center overflow-x-auto max-w-[300px] gap-3 "
                     style={{
                     scrollbarWidth: "none",
                     msOverflowStyle: "none",

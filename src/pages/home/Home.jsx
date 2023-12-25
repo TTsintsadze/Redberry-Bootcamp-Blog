@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import axios from 'axios';
 import Header from '../../components/Header';
 import HomeImg from '../../assets/Blog-1024x355 1.png'
@@ -6,19 +6,23 @@ import InputGroup from '../../components/InputGroup';
 import CategoryButton from '../../components/CategoryButton';
 import Modal from '../../components/Modal';
 import BlogCart from '../../components/BlogCart';
-import NatureImg from "../../assets/nature_img.jpg";
 import ErrorIcon from '../../assets/error.png'
 import SuccessIcon from '../../assets/success.png'
 import { AnimatePresence, motion } from 'framer-motion';
 import { useGlobalContext } from '../../context/Context';
 import { useSessionStorage } from '../../hooks/useSessionStorage';
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+
 
 const Home = () => {
   const [email, setEmail] = useSessionStorage("email", '')
   const [showModal, setShowModal] = useState(false);
-  const [blogs, setBlogs] = useState([])
   const [error, setError] = useState("");
-  const { categories, isLogged, setIsLogged } = useGlobalContext();
+  const { categories, isLogged, setIsLogged, blogs } = useGlobalContext();
 
   const loginUser = async (email) => {
     try {
@@ -49,27 +53,6 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "https://api.blog.redberryinternship.ge/api/blogs",
-          {
-            headers: {
-              Authorization: `Bearer ${"7a2b6b3d3f9a5370396c63aebe6118f45bd44e89337ae5206457b71256c5c1a5"}`,
-            },
-          }
-        );
-        console.log(response);
-        setBlogs(response.data.data)
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   const openModal = () => {
     setShowModal(true);
   };
@@ -77,6 +60,45 @@ const Home = () => {
   const closeModal = () => {
     setShowModal(false);
   };
+
+  const [selectedCategories, setSelectedCategories] = useSessionStorage("categories",[]);
+
+  const toggleCategorySelection = (categoryId) => {
+    const index = selectedCategories.indexOf(categoryId);
+    if (index === -1) {
+      setSelectedCategories([...selectedCategories, categoryId]);
+    } else {
+      const updatedCategories = [...selectedCategories];
+      updatedCategories.splice(index, 1); 
+      setSelectedCategories(updatedCategories);
+    }
+  };
+
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
+
+  useEffect(() => {
+    if (selectedCategories.length === 0) {
+      setFilteredBlogs(blogs);
+    } else {
+      const filtered = blogs.filter((blog) =>
+        selectedCategories.some((selectedCat) =>
+          blog.categories.some((blogCat) => blogCat.id === selectedCat)
+        )
+      );
+      setFilteredBlogs(filtered);
+    }
+  }, [selectedCategories, blogs]);
+
+  const isPublished = (publishDate) => {
+    const timestamp1 = new Date().getTime();
+    const timestamp2 = new Date(publishDate).getTime();
+
+    if(timestamp2 > timestamp1){
+      return true
+    }else{
+      return false
+    }
+  }
   return (
     <>
       <Modal showModal={showModal} setShowModal={closeModal} error={isLogged}>
@@ -143,31 +165,43 @@ const Home = () => {
       <div className="min-w-[1920px] min-h-[1080px] bg-[#E4E3EB] flex flex-col gap-12">
         <Header openModal={openModal} />
         <div className="flex px-24 py-8 justify-between items-center">
-          <h1 className="text-[64px] font-bold">ბლოგი</h1>
+          <h1 className="text-[74px] font-bold">ბლოგი</h1>
           <img src={HomeImg} className="w-[624px] h-[350px]" />
         </div>
-        <div className="px-24 py-8 flex gap-10 justify-center flex-wrap">
-          {categories.map((option) => (
-            <div>
-              <CategoryButton
-                text={option.title}
-                bgColor={option.background_color}
-                textColor={option.text_color}
-              />
+        <div className="px-24 py-8  flex justify-center overflow-hidden">
+          <div className=" w-[680px] flex gap-10 overflow-hidden" >
+            {categories.map((option) => (
+                <div
+                key={option.id}
+                className={` ${
+                  selectedCategories.includes(option.id)
+                    ? "border-[2px] border-black"
+                    : ""
+                  } flex-none`}
+                style={{ borderRadius: "30px" }}
+                onClick={() => {
+                  toggleCategorySelection(option.id);
+                }}
+              >
+              </div>
+            ))}
             </div>
-          ))}
-        </div>
+          </div>
         <div className="px-24 py-8 flex justify-between flex-wrap gap-y-12">
-          {blogs.map((blog) => (
-            <BlogCart
-              name={blog.author}
-              date={blog.publish_date}
-              img={blog.image}
-              announcement={blog.title}
-              description={blog.description}
-              categories={blog.categories}
-            />
-          ))}
+        {filteredBlogs
+            .filter((blog) => !isPublished(blog.publish_date))
+            .map((blog) => (
+              <BlogCart
+                key={blog.id}
+                name={blog.author}
+                date={blog.publish_date}
+                img={blog.image}
+                announcement={blog.title}
+                description={blog.description}
+                categories={blog.categories}
+                id={blog.id}
+              />
+            ))}
         </div>
       </div>
     </>

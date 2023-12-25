@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header';
 import NatureImg from "../../assets/nature_img.jpg";
 import CategoryButton from '../../components/CategoryButton';
@@ -6,13 +6,17 @@ import ArrowIcon from '../../assets/Arrow-2.svg'
 import ArrowIcon2 from '../../assets/Arrow-3.svg'
 import BlogCart from '../../components/BlogCart';
 import { Swiper, SwiperSlide } from "swiper/react";
+import axiosClient from '../../config/axiosClient';
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/free-mode";
 import { FreeMode, Pagination } from "swiper/modules";
+import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
+import { useGlobalContext } from '../../context/Context';
 
 const Blog = () => {
-    const [swiper, setSwiper] = useState(null); // State to store Swiper instance
+    const [swiper, setSwiper] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const goToNextSlide = () => {
       if (swiper !== null) {
@@ -20,112 +24,90 @@ const Blog = () => {
       }
     };
 
+    const [blog, setBlog] = useState({})
+    const {id} = useParams();
+    const {blogs} = useGlobalContext();
+
+     useEffect(() => {
+       const fetchData = async () => {
+         try {
+           const response = await axiosClient.get(`/blogs/${id}`);
+           console.log(response.data);
+           setBlog(response.data);
+         } catch (error) {
+           console.error("Error fetching data: ", error);
+         }
+       };
+
+       fetchData();
+     }, [id]);
+
     const goToPrevSlide = () => {
       if (swiper !== null) {
         swiper.slidePrev();
       }
     };
 
+    const [filteredBlogs, setFilteredBlogs] = useState([]);
+
+      useEffect(() => {
+        if (blog.categories && blog.categories.length > 0) {
+          const filtered = blogs.filter(
+            (item) =>
+              item.id !== blog.id &&
+              item.categories.some((blogCat) =>
+                blog.categories.some(
+                  (selectedCat) => blogCat.id === selectedCat.id
+                )
+              )
+          );
+          setFilteredBlogs(filtered);
+        }
+      }, [blog.categories, blog.id, blogs]);
+
+    const [isBeginning, setIsBeginning] = useState(true);
+    const [isEnd, setIsEnd] = useState(false);
+
     const handleSlideChange = (swiper) => {
-      setCurrentIndex(swiper.activeIndex);
+      setIsBeginning(swiper.isBeginning);
+      setIsEnd(swiper.isEnd);
     };
 
-    const carouselItems = [
-      {
-        name: "Item 1",
-        date: "Date 1",
-        announcement: "Announcement 1",
-        description: "Description 1",
-        img: NatureImg,
-      },
-      {
-        name: "Item 1",
-        date: "Date 1",
-        announcement: "Announcement 1",
-        description: "Description 1",
-        img: NatureImg,
-      },
-      {
-        name: "Item 1",
-        date: "Date 1",
-        announcement: "Announcement 1",
-        description: "Description 1",
-        img: NatureImg,
-      }
-    ];
 
   return (
     <div className="min-w-[1920px] min-h-[1080px] bg-[#F3F2FA] flex flex-col gap-12">
       <div className="flex px-24 py-8">
-        <button
-          className={`bg-[#FFFFFF] h-[44px] w-[44px] rounded-full flex items-center justify-center`}
-        >
-          <img src={ArrowIcon2} />
-        </button>
+        <Link to="/">
+          <button
+            className={`bg-[#FFFFFF] h-[44px] w-[44px] rounded-full flex items-center justify-center`}
+          >
+            <img src={ArrowIcon2} />
+          </button>
+        </Link>
         <div className="w-full justify-center flex ">
-          <div className="w-[720px] flex flex-col gap-4">
-            <img src={NatureImg} className="w-full rounded-xl h-[328px]" />
-            <p className="text-[16px] font-medium">ლილე კვარაცხელია</p>
+          <div className="w-[820px] flex flex-col gap-4">
+            <img src={blog.image} className="w-full rounded-xl h-[328px]" />
+            <p className="text-[16px] font-medium">{blog.author}</p>
             <p className="font-small text-[#85858D]">
-              02.11.2023 • lile.kvaratskhelia@redberry.ge
+              {blog.publish_date} • {blog?.email}
             </p>
             <h1 className="font-bold text-[30px] leading-[45px]">
-              მობილური ფოტოგრაფიის კონკურსის გამარჯვებულთა ვინაობა ცნობილია
+              {blog.title}
             </h1>
             <div className="flex gap-3 flex-wrap">
-              <CategoryButton
-                text={"კვლევა"}
-                bgColor={"#E9EFE9"}
-                textColor={"#60BE16"}
-              />
-              <CategoryButton
-                text={"ხელოვნური ინტელექტი"}
-                bgColor={"#EEE1F7"}
-                textColor={"#B71FDD"}
-              />
-              <CategoryButton
-                text={"UI/UX"}
-                bgColor={"#FA575714"}
-                textColor={"#DC2828"}
-              />
-              <CategoryButton
-                text={"ხელოვნური ინტელექტი"}
-                bgColor={"#EEE1F7"}
-                textColor={"#B71FDD"}
-              />
-              <CategoryButton
-                text={"UI/UX"}
-                bgColor={"#FA575714"}
-                textColor={"#DC2828"}
-              />
-              <CategoryButton
-                text={"ხელოვნური ინტელექტი"}
-                bgColor={"#EEE1F7"}
-                textColor={"#B71FDD"}
-              />
+            {blog && blog.categories
+                ? blog.categories.map((category) => (
+                    <CategoryButton
+                      key={category.id}
+                      text={category.title}
+                      bgColor={category.background_color}
+                      textColor={category.text_color}
+                    />
+                  ))
+                : null}
             </div>
             <p className="text-[#404049] text-[16px] leading-[28px]">
-              6 თვის შემდეგ ყველის ბრმა დეგუსტაციის დროც დადგა. მაქსიმალური
-              სიზუსტისთვის, ეს პროცესი ორჯერ გაიმეორეს და ორივეჯერ იმ ყველს
-              მიენიჭა უპირატესობა, რომელსაც ჰიპ-ჰოპს ასმენინებდნენ. „მუსიკალური
-              ენერგია პირდაპირ ყველის შუაგულში რეზონირებდა“, — აღნიშნა ბერნის
-              ხელოვნების უნივერსიტეტის წარმომადგენელმა, მაიკლ ჰერენბერგმა. რა
-              თქმა უნდა, ეს ერთი კვლევა საკმარისი არ არის საბოლოო დასკვნების
-              გამოსატანად. სანაცვლოდ, მეცნიერებს სურთ, უშუალოდ ჰიპ-ჰოპის ჟანრის
-              სხვადასხვა მუსიკა მოასმენინონ რამდენიმე ყველს და უკვე ისინი
-              შეაჯიბრონ ერთმანეთს. აქვე საგულისხმოა, რომ როგორც ბერნის
-              მეცნიერები განმარტავენ, ექსპერიმენტს საფუძვლად არა ყველის
-              გაუმჯობესებული წარმოება, არამედ კულტურული საკითხები დაედო. მათი
-              თქმით, ადამიანებს უყვართ ყველი და მუსიკა, ამიტომაც საინტერესოა ამ
-              ორის კავშირის დანახვა. 6 თვის შემდეგ ყველის ბრმა დეგუსტაციის დროც
-              დადგა. მაქსიმალური სიზუსტისთვის, ეს პროცესი ორჯერ გაიმეორეს და
-              ორივეჯერ იმ ყველს მიენიჭა უპირატესობა, რომელსაც ჰიპ-ჰოპს
-              ასმენინებდნენ. „მუსიკალური ენერგია პირდაპირ ყველის შუაგულში
-              რეზონირებდა“, — აღნიშნა ბერნის ხელოვნების უნივერსიტეტის
-              წარმომადგენელმა, მაიკლ ჰერენბერგმა. რა თქმა უნდა, ეს ერთი კვლევა
-              საკმარისი არ არის საბოლოო დასკვნების გამოსატანად. სანაცვლოდ,
-              მეცნიერებს სურთ, უშუალოდ ჰიპ-ჰოპის ჟანრის სხვადასხვა მუსიკა
-              მოასმენინონ რამდენიმე ყველს და უკვე ისინი შეაჯიბრონ ერთმანეთს.
+              {blog.description}
             </p>
           </div>
         </div>
@@ -138,7 +120,7 @@ const Blog = () => {
           <div className="flex gap-4">
           <button
               className={`bg-[${
-                currentIndex === 0 ? "#AABBCC" : "#E4E3EB"
+                isBeginning ? "#AABBCC" : "#E4E3EB"
               }] h-[44px] w-[44px] rounded-full flex items-center justify-center`}
               onClick={goToPrevSlide}
             >
@@ -150,9 +132,7 @@ const Blog = () => {
             </button>
             <button
               className={`bg-[${
-                currentIndex === carouselItems.length - 1
-                  ? "#AABBCC"
-                  : "#5D37F3"
+                isEnd ? "#AABBCC" : "#5D37F3"
               }] h-[44px] w-[44px] rounded-full flex items-center justify-center`}
               onClick={goToNextSlide}
             >
@@ -180,12 +160,20 @@ const Blog = () => {
             className="w-full mt-8"
             style={{ justifyContent: "space-between", width:"100%" }} 
           >
-            {carouselItems.map((item, index) => (
-              <SwiperSlide key={item.title}>
+            {filteredBlogs.map((blog, index) => (
+              <SwiperSlide key={blog.id}>
                 <div className="flex justify-center">
                   {" "}
-                  { }
-                  <BlogCart {...item} />
+                    <BlogCart
+                      key={blog.id}
+                      name={blog.author}
+                      date={blog.publish_date}
+                      img={blog.image}
+                      announcement={blog.title}
+                      description={blog.description}
+                      categories={blog.categories}
+                      id={blog.id}
+                    />
                 </div>
               </SwiperSlide>
             ))}

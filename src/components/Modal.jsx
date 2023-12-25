@@ -37,6 +37,7 @@ const Modal = ({ showModal, setShowModal, children }) => {
             backgroundColor: "rgba(0, 0, 0, 0.5)", 
             display: "flex",
             alignItems: "center",
+            zIndex:40,
             justifyContent: "center",
           }}
         >
