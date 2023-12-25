@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import ArrowDownIcon from "../assets/Vector.png";
 import CategoryButton from "./CategoryButton";
 import { useGlobalContext } from "../context/Context";
+import { ValidateBlog } from "../validation/validation";
+import DeleteIcon from "../assets/delete_icon.png";
 import axios from "axios";
 
 const MultiSelectDropdown = ({
@@ -18,6 +20,7 @@ const MultiSelectDropdown = ({
     const { info, setStore } = useGlobalContext();
     const [selectedOptions, setSelectedOptions] = useState(info.categories || []);
     const [newCategories, setNewCategories] = useState(info.categories);
+
 
     const handleToggle = () => {
         setIsOpen(!isOpen);
@@ -60,6 +63,12 @@ const MultiSelectDropdown = ({
             ...prevInfo,
             categories: [...prevInfo.categories, option],
           }));
+          const categoryErrors = ValidateBlog(info).categories;
+
+          setValidationErrors((prevErrors) => ({
+            ...prevErrors,
+            categories: categoryErrors,
+          }));
         }
       };
 
@@ -82,6 +91,23 @@ const MultiSelectDropdown = ({
     const handleTouchEnd = () => {
       setStartX(null);
     };
+
+    const handleDeleteOption = (option) => {
+        const updatedOptions = selectedOptions.filter((opt) => opt !== option);
+        setSelectedOptions(updatedOptions);
+    
+        setStore((prevInfo) => ({
+          ...prevInfo,
+          categories: updatedOptions,
+        }));
+    
+        const categoryErrors = updatedOptions.length === 0 ? "invalid" : "valid";
+    
+        setValidationErrors((prevErrors) => ({
+          ...prevErrors,
+          categories: categoryErrors,
+        }));
+      };
 
     return (
         <div
@@ -111,12 +137,23 @@ const MultiSelectDropdown = ({
                     onTouchEnd={handleTouchEnd}
                 >
                     {selectedOptions.map((option, index) => (
-                    <CategoryButton
-                        key={index}
-                        text={option.title}
-                        bgColor={option.background_color}
-                        textColor={option.text_color}
-                    />
+                    <div
+                        style={{
+                        backgroundColor: option.background_color,
+                        borderRadius: "30px",
+                        padding:  "8px 18px",
+                        whiteSpace: "nowrap",
+                        }}
+                        className="flex justify-center gap-8 items-center"
+                    >
+                        <p style={{ color: option.text_color }} className="text-[14px] font-medium">
+                        {option.title}
+                        </p>
+                        <img
+                        src={DeleteIcon}
+                        onClick={() => handleDeleteOption(option)}
+                        />
+                    </div>
                     ))}
                 </div>
                 ) : (

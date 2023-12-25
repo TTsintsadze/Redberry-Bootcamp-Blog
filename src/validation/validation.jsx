@@ -1,18 +1,22 @@
 export const ValidateBlog = (values) => {
-  const response = {};
+  const response = {
+    author: {
+      tooShort: "",
+      twoWord: "",
+      georgianChars: "",
+    },
+  };
 
   const REGEX_EMAIL = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@redberry\.ge$/;
-  const REGEX_NAME = /^(?:[ა-ჰ]+\s[ა-ჰ]+)+$/;
+  const REGEX_NAME = /^[ა-ჰ\s]+$/;
 
+  const words = values.author.trim().split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
 
-  if (
-    !values?.author ||
-    values?.author.trim().length < 4 ||
-    !REGEX_NAME.test(values?.author)
-  ) {
-    response.author = "invalid";
-  } else {
-    response.author = "valid";
+  if (!REGEX_NAME.test(values?.author)) {
+    response.author.georgianChars = "invalid";
+  }else{
+    response.author.georgianChars = "valid";
   }
 
   if (!values?.title || values?.title.length < 2) {
@@ -40,7 +44,13 @@ export const ValidateBlog = (values) => {
     response.publish_date = "valid";
   }
 
-   if (!values?.image) {
+  if (!values?.categories || !values?.categories.length !== 0) {
+    response.categories = "valid";
+  } else {
+    response.categories = "invalid";
+  }
+
+  if (!values?.image || !values?.image.url) {
      response.image = "invalid";
    } else {
      response.image = "valid";

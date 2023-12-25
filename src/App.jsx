@@ -6,16 +6,23 @@ import Home from './pages/home/Home';
 import Blog from './pages/Blog/Blog';
 import CreateBlog from './pages/Blog/CreateBlog';
 import { AppProvider } from './context/Context.jsx'
+import NotFound from './pages/notFound/NotFound';
+import { useGlobalContext } from './context/Context';
 
 function App() {
+  const {isLogged} = useGlobalContext()
 
   return (
     <>
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/create-blog" element={<CreateBlog />} />
+          <Route path="/blog/:id" element={<Blog />} />
+          {isLogged === "isLogged" ? (
+            <Route path="/create-blog" element={<CreateBlog />} />
+          ) : (
+            <Route path="/create-blog" element={<NotFound />} />
+          )}
         </Routes>
       </Router>
     </>
