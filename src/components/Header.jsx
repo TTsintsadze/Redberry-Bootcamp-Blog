@@ -8,7 +8,9 @@ const Header = ({ openModal }) => {
   const navigate = useNavigate()
   return (
     <div className="flex items-center justify-between bg-white px-24 py-8">
-      <img src={RedberryLogo} />
+      <a href="/">
+      <img src={RedberryLogo} alt="Redberry Logo" />
+      </a>
       {isLogged === "isLogged" ? (
         <button
           className="bg-[#5D37F3] rounded-md px-[20px] py-[10px] text-white text-[14px]"
