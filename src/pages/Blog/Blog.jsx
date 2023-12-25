@@ -47,20 +47,20 @@ const Blog = () => {
 
     const [filteredBlogs, setFilteredBlogs] = useState([]);
 
-      useEffect(() => {
-        if (singleBlog.categories && singleBlog.categories.length > 0) {
-          const filtered = blogs.filter(
-            (item) =>
-              item.id !== singleBlog.id &&
-              item.categories.some((blogCat) =>
+    useEffect(() => {
+      if (singleBlog.categories && singleBlog.categories.length > 0) {
+        const filtered = blogs.filter(
+          (item) =>
+            item.id !== singleBlog.id &&
+            item.categories.some((blogCat) =>
               singleBlog.categories.some(
-                  (selectedCat) => blogCat.id === selectedCat.id
-                )
+                (selectedCat) => blogCat.id === selectedCat.id
               )
-          );
-          setFilteredBlogs(filtered);
-        }
-      }, [blog.categories, blog.id, blogs]);
+            )
+        );
+        setFilteredBlogs(filtered);
+      }
+    }, [singleBlog.categories, singleBlog.id, blogs]);
 
     const [isBeginning, setIsBeginning] = useState(true);
     const [isEnd, setIsEnd] = useState(false);
@@ -167,20 +167,20 @@ const Blog = () => {
           >
             {filteredBlogs.map((blog, index) => (
               <SwiperSlide key={blog.id}>
-                <div className="flex justify-center">
-                  {" "}
-                  <BlogCart
-                    key={blog.id}
-                    name={blog.author}
-                    date={blog.publish_date}
-                    img={blog.image}
-                    announcement={blog.title}
-                    description={blog.description}
-                    categories={blog.categories}
-                    id={blog.id}
-                  />
-                </div>
-              </SwiperSlide>
+              <div className="flex justify-center">
+                {" "}
+                <BlogCart
+                  key={blog.id}
+                  name={blog.author}
+                  date={blog.publish_date}
+                  img={blog.image}
+                  announcement={blog.title}
+                  description={blog.description}
+                  categories={blog.categories}
+                  id={blog.id}
+                />
+              </div>
+            </SwiperSlide>
             ))}
           </Swiper>
         </div>

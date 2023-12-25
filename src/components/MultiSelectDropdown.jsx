@@ -6,55 +6,51 @@ import { ValidateBlog } from "../validation/validation";
 import DeleteIcon from "../assets/delete_icon.png";
 import HorizontalScroll from "./HorizontalScroll";
 
-const MultiSelectDropdown = ({
-    className = "",
-    isValid,
-}) => {
-
+const MultiSelectDropdown = ({ className = "", isValid }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [categories, setCategories] = useState([]);
-    const { info, setStore } = useGlobalContext();
-
+    const { info, setStore, setValidationErrors, validationErrors, categories } =
+      useGlobalContext();
+  
     const handleToggle = () => {
-        setIsOpen(!isOpen);
+      setIsOpen(!isOpen);
     };
-
+  
     const dropdownStyles = {
-        maxHeight: isOpen ? "200px" : "0",
-        opacity: isOpen ? 1 : 0,
-        transition: "max-height 0.3s ease-in-out, opacity 0.3s ease-in-out",
+      maxHeight: isOpen ? "200px" : "0",
+      opacity: isOpen ? 1 : 0,
+      transition: "max-height 0.3s ease-in-out, opacity 0.3s ease-in-out",
     };
 
     const handleOptionClick = (option) => {
-        if (!info.categories.includes(option)) {
-          setStore((prevInfo) => ({
-            ...prevInfo,
-            categories: [...prevInfo.categories, option],
-          }));
-          const categoryErrors = ValidateBlog(info).categories;
+    if (!info.categories.includes(option)) {
+      setStore((prevInfo) => ({
+        ...prevInfo,
+        categories: [...prevInfo.categories, option],
+      }));
 
-          setValidationErrors((prevErrors) => ({
-            ...prevErrors,
-            categories: categoryErrors,
-          }));
-        }
-      };
+      const categoryErrors = ValidateBlog(info).categories;
 
+      setValidationErrors((prevErrors) => ({
+        ...prevErrors,
+        categories: categoryErrors,
+      }));
+    }
+    };
     const handleDeleteOption = (option) => {
         const updatedOptions = info.categories.filter((opt) => opt !== option);
-    
+
         setStore((prevInfo) => ({
-          ...prevInfo,
-          categories: updatedOptions,
+        ...prevInfo,
+        categories: updatedOptions,
         }));
-    
+
         const categoryErrors = updatedOptions.length === 0 ? "invalid" : "valid";
-    
+
         setValidationErrors((prevErrors) => ({
-          ...prevErrors,
-          categories: categoryErrors,
+        ...prevErrors,
+        categories: categoryErrors,
         }));
-      };
+    };
 
     return (
         <div
@@ -73,7 +69,7 @@ const MultiSelectDropdown = ({
                 className={`bg-white flex items-center cursor-pointer justify-between`}
                 onClick={handleToggle}
             >
-                 {info.categories.length > 0 ? (
+                {info.categories.length > 0 ? (
                 <HorizontalScroll className="flex items-center overflow-hidden max-w-[300px] gap-3">
                     {info.categories.map((option, index) => (
                     <div
@@ -121,19 +117,19 @@ const MultiSelectDropdown = ({
         backgroundColor: "white",
     }}
     className="flex flex-wrap px-2 gap-2 py-2 mt-1 scroll-container"
->
+    >
     {categories.map((option, index) => (
           <div key={index} onClick={() => handleOptionClick(option)}>
             <CategoryButton
-                text={option.title}
-                bgColor={option.background_color}
-                textColor={option.text_color}
+              text={option.title}
+              bgColor={option.background_color}
+              textColor={option.text_color}
             />
-        </div>
-    ))}
-</ul>
-        </div>
-    );
+          </div>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default MultiSelectDropdown;

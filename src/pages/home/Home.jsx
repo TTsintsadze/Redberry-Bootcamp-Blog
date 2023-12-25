@@ -10,18 +10,18 @@ import HorizontalScroll from '../../components/HorizontalScroll';
 const Home = () => {
   const { categories, blogs} =
     useGlobalContext();
-  const [selectedCategories, setSelectedCategories] = useSessionStorage("categories",[]);
+    const [selectedCategories, setSelectedCategories] = useSessionStorage("categories",[]);
 
-  const toggleCategorySelection = (categoryId) => {
-    const index = selectedCategories.indexOf(categoryId);
-    if (index === -1) {
-      setSelectedCategories([...selectedCategories, categoryId]);
-    } else {
-      const updatedCategories = [...selectedCategories];
-      updatedCategories.splice(index, 1); 
-      setSelectedCategories(updatedCategories);
-    }
-  };
+    const toggleCategorySelection = (categoryId) => {
+      const index = selectedCategories.indexOf(categoryId);
+      if (index === -1) {
+        setSelectedCategories([...selectedCategories, categoryId]);
+      } else {
+        const updatedCategories = [...selectedCategories];
+        updatedCategories.splice(index, 1); 
+        setSelectedCategories(updatedCategories);
+      }
+    };
 
   const [filteredBlogs, setFilteredBlogs] = useState([]);
 
@@ -56,49 +56,49 @@ const Home = () => {
       <img src={HomeImg} className="w-[624px] h-[350px]" />
     </div>
     <div className="px-24 py-8  flex justify-center ">
-      <HorizontalScroll className="w-[684px] flex gap-[22px] horizontal-scroll overflow-hidden">
-
-            {categories.map((option) => (
-              <div
-                key={option.id}
-                className={`scroll-item ${
-                  selectedCategories.includes(option.id)
-                    ? "border-[2px] border-black"
-                    : ""
-                } flex-none`}
-                style={{ borderRadius: "30px" }}
-                onClick={() => {
-                  toggleCategorySelection(option.id);
-                }}
-              >
-                <CategoryButton
-                  text={option.title}
-                  bgColor={option.background_color}
-                  textColor={option.text_color}
-                />
-              </div>
-            ))}
-
-        </HorizontalScroll>
-    </div>
-    <div className="px-24 py-8 flex justify-between flex-wrap gap-y-12">
-      {filteredBlogs
-        .filter((blog) => !isPublished(blog.publish_date))
-        .map((blog) => (
-          <BlogCart
-            key={blog.id}
-            name={blog.author}
-            date={blog.publish_date}
-            img={blog.image}
-            announcement={blog.title}
-            description={blog.description}
-            categories={blog.categories}
-            id={blog.id}
-          />
-        ))}
-    </div>
-  </GuestLayout>
-);
+    <HorizontalScroll className="w-[684px] flex gap-[22px] horizontal-scroll overflow-hidden">
+         
+         {categories.map((option) => (
+           <div
+             key={option.id}
+             className={`scroll-item ${
+               selectedCategories.includes(option.id)
+                 ? "border-[2px] border-black"
+                 : ""
+             } flex-none`}
+             style={{ borderRadius: "30px" }}
+             onClick={() => {
+               toggleCategorySelection(option.id);
+             }}
+           >
+             <CategoryButton
+               text={option.title}
+               bgColor={option.background_color}
+               textColor={option.text_color}
+             />
+           </div>
+         ))}
+       
+     </HorizontalScroll>
+   </div>
+   <div className="px-24 py-8 flex justify-between flex-wrap gap-y-12">
+        {filteredBlogs
+          .filter((blog) => !isPublished(blog.publish_date))
+          .map((blog) => (
+            <BlogCart
+              key={blog.id}
+              name={blog.author}
+              date={blog.publish_date}
+              img={blog.image}
+              announcement={blog.title}
+              description={blog.description}
+              categories={blog.categories}
+              id={blog.id}
+            />
+          ))}
+      </div>
+    </GuestLayout>
+  );
 }
 
-export default Home;
+export default Home
