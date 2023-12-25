@@ -36,60 +36,40 @@ body {
 }
 
 .horizontal-scroll {
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f9f9f9;
-
-    -ms-overflow-style: none;
-    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
 }
 
 .horizontal-scroll::-webkit-scrollbar {
-    height: 8px;
+    display: none;
+  }
+
+
+@keyframes shakeKeyframes {
+    0% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-10px);
+    }
+
+    40% {
+        transform: translateX(10px);
+    }
+
+    60% {
+        transform: translateX(-10px);
+    }
+
+    80% {
+        transform: translateX(10px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
 }
 
-.horizontal-scroll::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 4px;
-}
-
-.horizontal-scroll::-webkit-scrollbar-track {
-    background-color: #f9f9f9;
-    border-radius: 4px;
-}
-
-.scroll-content {
-    display: flex;
-    gap: 20px;
-    padding: 10px;
-}
-
-
-.horizontal-scroll {
-    max-width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f9f9f9;
-    -ms-overflow-style: none;
-    scrollbar-width: thin;
-    scroll-snap-type: x mandatory;
-}
-
-.scroll-content {
-    display: flex;
-    gap: 20px;
-    padding: 10px;
-    scroll-snap-type: x mandatory;
-}
-
-.scroll-item {
-    flex: 0 0 auto;
-    width: 300px;
-    scroll-snap-align: start;
-
-    background-color: #f0f0f0;
-    border-radius: 8px;
-    padding: 20px;
+.shakeAnimation {
+    animation: shakeKeyframes 0.4s linear;
 }

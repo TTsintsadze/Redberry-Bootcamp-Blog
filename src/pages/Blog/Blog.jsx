@@ -13,20 +13,22 @@ import "swiper/css/free-mode";
 import { FreeMode, Pagination } from "swiper/modules";
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { motion } from "framer-motion";
+import GuestLayout from "../../layouts/GuestLayout";
+import HorizontalScroll from '../../components/HorizontalScroll';
 import { useGlobalContext } from '../../context/Context';
 
 const Blog = () => {
     const [swiper, setSwiper] = useState(null);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [blog, setBlog] = useState({})
+    const { id } = useParams();
+    const { blogs, animations } = useGlobalContext();
     const goToNextSlide = () => {
       if (swiper !== null) {
         swiper.slideNext();
       }
     };
 
-    const [blog, setBlog] = useState({})
-    const {id} = useParams();
-    const {blogs} = useGlobalContext();
 
      useEffect(() => {
        const fetchData = async () => {
@@ -75,7 +77,7 @@ const Blog = () => {
 
 
   return (
-    <div className="min-w-[1920px] min-h-[1080px] bg-[#F3F2FA] flex flex-col gap-12">
+    <GuestLayout>
       <div className="flex px-24 py-8">
         <Link to="/">
           <button
@@ -94,31 +96,31 @@ const Blog = () => {
             <h1 className="font-bold text-[30px] leading-[45px]">
               {blog.title}
             </h1>
-            <div className="flex gap-3 flex-wrap">
-            {blog && blog.categories
+            <HorizontalScroll className="flex gap-3 overflow-hidden">
+              {blog && blog.categories
                 ? blog.categories.map((category) => (
                     <CategoryButton
-                      key={category.id}
+                      key={category.id} // Remember to provide a unique key when using map in React
                       text={category.title}
                       bgColor={category.background_color}
                       textColor={category.text_color}
                     />
                   ))
                 : null}
-            </div>
+            </HorizontalScroll>
             <p className="text-[#404049] text-[16px] leading-[28px]">
               {blog.description}
             </p>
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-full">
+      <div className=" flex flex-col w-full">
         <div className="flex justify-between items-center px-24 py-8">
           <h1 className="font-bold text-[30px] leading-[45px]">
             მსგავსი სტატიები
           </h1>
           <div className="flex gap-4">
-          <button
+            <button
               className={`bg-[${
                 isBeginning ? "#AABBCC" : "#E4E3EB"
               }] h-[44px] w-[44px] rounded-full flex items-center justify-center`}
@@ -158,29 +160,29 @@ const Blog = () => {
             pagination={{ clickable: true }}
             modules={[FreeMode]}
             className="w-full mt-8"
-            style={{ justifyContent: "space-between", width:"100%" }} 
+            style={{ justifyContent: "space-between", width: "100%" }}
           >
             {filteredBlogs.map((blog, index) => (
               <SwiperSlide key={blog.id}>
                 <div className="flex justify-center">
                   {" "}
-                    <BlogCart
-                      key={blog.id}
-                      name={blog.author}
-                      date={blog.publish_date}
-                      img={blog.image}
-                      announcement={blog.title}
-                      description={blog.description}
-                      categories={blog.categories}
-                      id={blog.id}
-                    />
+                  <BlogCart
+                    key={blog.id}
+                    name={blog.author}
+                    date={blog.publish_date}
+                    img={blog.image}
+                    announcement={blog.title}
+                    description={blog.description}
+                    categories={blog.categories}
+                    id={blog.id}
+                  />
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
         </div>
       </div>
-    </div>
+    </GuestLayout>
   );
 }
 

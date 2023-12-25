@@ -19,7 +19,7 @@ import CloseIcon from '../../assets/close.png'
 const CreateBlog = () => {
     const [statusCode, setStatusCode] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const { info, setStore, setValidationErrors, validationErrors, setBlogs} =
+    const { info, setStore, setValidationErrors, validationErrors, setBlogs, animations} =
       useGlobalContext();
 
     const handleTextInputChange = (e) => {
@@ -223,7 +223,14 @@ const CreateBlog = () => {
             </Modal>
           )}
     
-          <div className="min-w-[1920px] min-h-[1080px] bg-[#FBFAFF] flex flex-col gap-12">
+            <motion.div
+                className="min-w-[1920px] min-h-[1080px] bg-[#FBFAFF] flex flex-col gap-12"
+                variants={animations}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+            >
             <div className="flex items-center justify-center bg-white px-24 py-8">
               <img src={RedberryLogo} />
             </div>
@@ -295,7 +302,11 @@ const CreateBlog = () => {
                                   ? "border-green-500 bg-[#F8FFF8]"
                                 : "#c3c2c8"
                             } border-[#c3c2c8] rounded-2xl px-[15px] py-[16px] outline-none
-                            `}
+                            ${!isFocused ? "focus:border-[#5D37F3]" : ""} ${
+                              isAnyAuthorFieldInvalid
+                                ? "shakeAnimation"
+                                : ""
+                            }`}
                             onChange={handleTextInputChange}
                           />
                         </div>
@@ -411,7 +422,7 @@ const CreateBlog = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </>
       );
     }

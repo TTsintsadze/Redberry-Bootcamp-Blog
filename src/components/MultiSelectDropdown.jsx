@@ -81,13 +81,16 @@ const MultiSelectDropdown = ({
 
     return (
         <div
-            className={`w-full bg-white px-[15px] py-[16px] rounded-2xl relative border-2 ${isOpen ? "open" : ""
+            className={`w-full bg-white px-[15px] rounded-2xl relative border-2 ${isOpen ? "open" : ""
                 } ${className} ${isValid === "invalid"
                     ? "border-red-500"
                     : isValid === "valid"
                         ? "border-green-500"
                         : ""
-                }`}
+                    } ${isValid === "invalid" ? "shakeAnimation" : ""} ${
+                        selectedOptions.length > 0 ? "py-[12px]" : "py-[16px]"
+                      }`}
+                      style={{ boxSizing: "border-box" }}
         >
             <div
                 className={`bg-white flex items-center cursor-pointer justify-between`}
