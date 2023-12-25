@@ -19,8 +19,14 @@ import CloseIcon from '../../assets/close.png'
 const CreateBlog = () => {
   const [statusCode, setStatusCode] = useState(null);
   const [showModal, setShowModal] = useState(false);
-   const { info, setStore, setValidationErrors, validationErrors, setBlogs, animations,} =
-     useGlobalContext();
+  const {
+    info,
+    setStore,
+    setValidationErrors,
+    validationErrors,
+    animations,
+    getBlogs
+  } = useGlobalContext();
 
     const handleTextInputChange = (e) => {
         const { value, name } = e.target;
@@ -125,13 +131,15 @@ const CreateBlog = () => {
             errors.author &&
             Object.values(errors.author).every((error) => error === "valid");
 
-        if (isAuthorValid &&
-            errors.title == "valid" &&
-            errors.description == "valid" &&
-            errors.publish_date == "valid" &&
-            errors.categories == "valid" &&
-            errors.image == "valid"
-        ) {
+          if (
+              isAuthorValid &&
+              errors.title == "valid" &&
+              errors.description == "valid" &&
+              errors.publish_date == "valid" &&
+              info.categories.length !== 0 &&
+              errors.image == "valid" &&
+              errors.email !== "invalid" 
+            ) {
             setFormValid(true);
         } else {
             setFormValid(false);
@@ -183,6 +191,7 @@ const CreateBlog = () => {
                email: "",
              }));
              setValidationErrors({})
+             getBlogs()
           }
           console.log("Blog created successfully:", blogResponse);
         } catch (error) {

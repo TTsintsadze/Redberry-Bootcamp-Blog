@@ -24,19 +24,20 @@ export const AppProvider = ({children}) => {
     const [isLogged, setIsLogged] = useSessionStorage("isLoggedin", "");
     const [categories, setCategories] = useState([]);
     const [blogs, setBlogs] = useState([]);
+    const [singleBlog, setSingleBlog] = useState({});
+
+    const getBlogs = async () => {
+      try {
+        const response = await axiosClient.get("/blogs");
+        console.log(response);
+        setBlogs(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
 
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await axiosClient.get("/blogs");
-          console.log(response);
-          setBlogs(response.data.data);
-        } catch (error) {
-          console.error("Error fetching data: ", error);
-        }
-      };
-
-      fetchData();
+      getBlogs()
     }, []);
 
      useEffect(() => {
@@ -104,7 +105,10 @@ export const AppProvider = ({children}) => {
           setBlogs,
           email,
           setEmail,
-          loginUser
+          loginUser,
+          singleBlog,
+          setSingleBlog,
+          getBlogs,
         }}
       >
         {children}

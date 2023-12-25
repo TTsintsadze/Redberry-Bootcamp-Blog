@@ -19,7 +19,7 @@ const BlogCart = ({
       <Link to={`/blog/${id}`}>
         <img src={img} className="w-full h-[328px] rounded-xl" alt={name} />
       </Link>
-      <p className="text-[16px] font-medium">{name}</p>
+      <p className="text-[16px] leading-[20px]">{name}</p>
       <p className="font-small text-[#85858D]">{date}</p>
       <HorizontalScroll className="flex gap-3 overflow-hidden">
       {announcement}
@@ -34,11 +34,11 @@ const BlogCart = ({
           />
         ))}
       </div>
-      <p className="text-[#404049] text-[16px] leading-[28px] overflow-hidden line-clamp-3 h-[84px]">
+      <p className="text-[#404049] font-[400] text-[16px] leading-[28px] overflow-hidden line-clamp-3 h-[56px]">
         {description}
       </p>
       <Link
-        className="text-[#5D37F3] flex items-center gap-2"
+        className="text-[#5D37F3] flex items-center gap-2 text-[14px]"
         to={`/blog/${id}`}
       >
         სრულად ნახვა

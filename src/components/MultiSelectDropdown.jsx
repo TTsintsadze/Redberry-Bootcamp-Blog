@@ -1,9 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import ArrowDownIcon from "../assets/Vector.png";
 import CategoryButton from "./CategoryButton";
 import { useGlobalContext } from "../context/Context";
 import { ValidateBlog } from "../validation/validation";
 import DeleteIcon from "../assets/delete_icon.png";
+import HorizontalScroll from "./HorizontalScroll";
 
 const MultiSelectDropdown = ({
     className = "",
@@ -13,8 +14,6 @@ const MultiSelectDropdown = ({
     const [isOpen, setIsOpen] = useState(false);
     const [categories, setCategories] = useState([]);
     const { info, setStore } = useGlobalContext();
-    const [selectedOptions, setSelectedOptions] = useState(info.categories || []);
-
 
     const handleToggle = () => {
         setIsOpen(!isOpen);
@@ -27,8 +26,7 @@ const MultiSelectDropdown = ({
     };
 
     const handleOptionClick = (option) => {
-        if (!selectedOptions.includes(option)) {
-          setSelectedOptions([...selectedOptions, option]);
+        if (!info.categories.includes(option)) {
           setStore((prevInfo) => ({
             ...prevInfo,
             categories: [...prevInfo.categories, option],
@@ -42,29 +40,8 @@ const MultiSelectDropdown = ({
         }
       };
 
-    const containerRef = useRef(null);
-    const [startX, setStartX] = useState(null);
-    const [scrollLeft, setScrollLeft] = useState(0);
-
-    const handleTouchStart = (e) => {
-      setStartX(e.touches[0].clientX);
-      setScrollLeft(containerRef.current.scrollLeft);
-    };
-
-    const handleTouchMove = (e) => {
-      if (!startX) return;
-      const x = e.touches[0].clientX;
-      const distance = x - startX;
-      containerRef.current.scrollLeft = scrollLeft - distance;
-    };
-
-    const handleTouchEnd = () => {
-      setStartX(null);
-    };
-
     const handleDeleteOption = (option) => {
-        const updatedOptions = selectedOptions.filter((opt) => opt !== option);
-        setSelectedOptions(updatedOptions);
+        const updatedOptions = info.categories.filter((opt) => opt !== option);
     
         setStore((prevInfo) => ({
           ...prevInfo,
@@ -88,7 +65,7 @@ const MultiSelectDropdown = ({
                         ? "border-green-500"
                         : ""
                     } ${isValid === "invalid" ? "shakeAnimation" : ""} ${
-                        selectedOptions.length > 0 ? "py-[12px]" : "py-[16px]"
+                        info.categories.length > 0 ? "py-[12px]" : "py-[16px]"
                       }`}
                       style={{ boxSizing: "border-box" }}
         >
@@ -96,21 +73,11 @@ const MultiSelectDropdown = ({
                 className={`bg-white flex items-center cursor-pointer justify-between`}
                 onClick={handleToggle}
             >
-                {selectedOptions.length > 0 ? (
-                <div
-                    ref={containerRef}
-                    className="flex items-center overflow-x-auto max-w-[300px] gap-3 "
-                    style={{
-                    scrollbarWidth: "none",
-                    msOverflowStyle: "none",
-                    overflow: "hidden",
-                    }}
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={handleTouchEnd}
-                >
-                    {selectedOptions.map((option, index) => (
+                 {info.categories.length > 0 ? (
+                <HorizontalScroll className="flex items-center overflow-hidden max-w-[300px] gap-3">
+                    {info.categories.map((option, index) => (
                     <div
+                        key={index}
                         style={{
                         backgroundColor: option.background_color,
                         borderRadius: "30px",
@@ -128,7 +95,7 @@ const MultiSelectDropdown = ({
                         />
                     </div>
                     ))}
-                </div>
+                </HorizontalScroll>
                 ) : (
                 <h1 className="font-medium">აირჩიე კატეგორია</h1>
                 )}
@@ -155,8 +122,8 @@ const MultiSelectDropdown = ({
     }}
     className="flex flex-wrap px-2 gap-2 py-2 mt-1 scroll-container"
 >
-    {categories.map((option) => (
-        <div key={option.id} onClick={() => handleOptionClick(option)}>
+    {categories.map((option, index) => (
+          <div key={index} onClick={() => handleOptionClick(option)}>
             <CategoryButton
                 text={option.title}
                 bgColor={option.background_color}

@@ -16,9 +16,9 @@ import { useGlobalContext } from '../../context/Context';
 
 const Blog = () => {
     const [swiper, setSwiper] = useState(null);
-    const [blog, setBlog] = useState({})
+    const [singleBlog, setSingleBlog] = useState({});
     const { id } = useParams();
-    const { blogs, animations } = useGlobalContext();
+    const { blogs} = useGlobalContext();
     const goToNextSlide = () => {
       if (swiper !== null) {
         swiper.slideNext();
@@ -30,15 +30,14 @@ const Blog = () => {
        const fetchData = async () => {
          try {
            const response = await axiosClient.get(`/blogs/${id}`);
-           console.log(response.data);
-           setBlog(response.data);
+           setSingleBlog(response.data);
          } catch (error) {
            console.error("Error fetching data: ", error);
          }
        };
 
        fetchData();
-     }, [id]);
+    }, [id, blogs]);
 
     const goToPrevSlide = () => {
       if (swiper !== null) {
@@ -49,12 +48,12 @@ const Blog = () => {
     const [filteredBlogs, setFilteredBlogs] = useState([]);
 
       useEffect(() => {
-        if (blog.categories && blog.categories.length > 0) {
+        if (singleBlog.categories && singleBlog.categories.length > 0) {
           const filtered = blogs.filter(
             (item) =>
-              item.id !== blog.id &&
+              item.id !== singleBlog.id &&
               item.categories.some((blogCat) =>
-                blog.categories.some(
+              singleBlog.categories.some(
                   (selectedCat) => blogCat.id === selectedCat.id
                 )
               )
@@ -84,17 +83,23 @@ const Blog = () => {
         </Link>
         <div className="w-full justify-center flex ">
           <div className="w-[820px] flex flex-col gap-4">
-            <img src={blog.image} className="w-full rounded-xl h-[328px]" />
-            <p className="text-[16px] font-medium">{blog.author}</p>
-            <p className="font-small text-[#85858D]">
-              {blog.publish_date} • {blog?.email}
+          <img src={singleBlog.image} className="w-full rounded-xl h-[328px]" />
+            <p className="text-[16px] font-medium">{singleBlog.author}</p>
+            <p className="font-small text-[#85858D] ">
+              {singleBlog.publish_date && singleBlog?.email ? (
+                <>
+                  {singleBlog.publish_date} • {singleBlog.email}
+                </>
+              ) : (
+                <>{singleBlog.publish_date || singleBlog.email}</>
+              )}
             </p>
             <h1 className="font-bold text-[30px] leading-[45px]">
-              {blog.title}
+              {singleBlog.title}
             </h1>
             <HorizontalScroll className="flex gap-3 overflow-hidden">
-              {blog && blog.categories
-                ? blog.categories.map((category) => (
+              {singleBlog && singleBlog.categories
+                ? singleBlog.categories.map((category) => (
                     <CategoryButton
                       key={category.id} // Remember to provide a unique key when using map in React
                       text={category.title}
@@ -104,8 +109,8 @@ const Blog = () => {
                   ))
                 : null}
             </HorizontalScroll>
-            <p className="text-[#404049] text-[16px] leading-[28px]">
-              {blog.description}
+            <p className="text-[#404049] text-[16px] leading-[28px] fon-[400] w-full break-words">
+              {singleBlog.description}
             </p>
           </div>
         </div>
@@ -117,10 +122,11 @@ const Blog = () => {
           </h1>
           <div className="flex gap-4">
             <button
-              className={`bg-[${
-                isBeginning ? "#AABBCC" : "#E4E3EB"
-              }] h-[44px] w-[44px] rounded-full flex items-center justify-center`}
+              className={`h-[44px] w-[44px] rounded-full flex items-center justify-center `}
               onClick={goToPrevSlide}
+              style={{
+                backgroundColor: `${isBeginning? "#E4E3EB" : "#5D37F3"}`,
+              }}
             >
               <img
                 src={ArrowIcon}
@@ -129,9 +135,10 @@ const Blog = () => {
               />
             </button>
             <button
-              className={`bg-[${
-                isEnd ? "#AABBCC" : "#5D37F3"
-              }] h-[44px] w-[44px] rounded-full flex items-center justify-center`}
+              className={`h-[44px] w-[44px] rounded-full flex items-center justify-center`}
+              style={{
+                backgroundColor: `${isEnd ? "#E4E3EB" : "#5D37F3"}`,
+              }}
               onClick={goToNextSlide}
             >
               <img src={ArrowIcon} alt="Next" />
