@@ -65,7 +65,7 @@ export const AppProvider = ({children}) => {
           },
           {
             headers: {
-              Authorization: `Bearer${"7a2b6b3d3f9a5370396c63aebe6118f45bd44e89337ae5206457b71256c5c1a5"}`,
+              Authorization: `Bearer${"fe5c6007e9a12d8a87049dda03d1903e260cf8d7b9ce79a5f6c86922c48e2ab9"}`,
             },
           }
         );
