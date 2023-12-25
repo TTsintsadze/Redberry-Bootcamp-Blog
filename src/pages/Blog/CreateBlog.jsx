@@ -17,10 +17,10 @@ import CloseIcon from '../../assets/close.png'
 
 
 const CreateBlog = () => {
-    const [statusCode, setStatusCode] = useState(null);
-    const [showModal, setShowModal] = useState(false);
-    const { info, setStore, setValidationErrors, validationErrors, setBlogs, animations} =
-      useGlobalContext();
+  const [statusCode, setStatusCode] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+   const { info, setStore, setValidationErrors, validationErrors, setBlogs, animations,} =
+     useGlobalContext();
 
     const handleTextInputChange = (e) => {
         const { value, name } = e.target;
@@ -172,6 +172,17 @@ const CreateBlog = () => {
           if (blogResponse.status === 204) {
             setShowModal(true);
             setStatusCode(blogResponse.status);
+             setStore((prevInfo) => ({
+               ...prevInfo,
+               title: "",
+               description: "",
+               image: {},
+               author: "",
+               publish_date: "",
+               categories: [],
+               email: "",
+             }));
+             setValidationErrors({})
           }
           console.log("Blog created successfully:", blogResponse);
         } catch (error) {
@@ -190,9 +201,7 @@ const CreateBlog = () => {
         ).some((error) => error === "invalid");
 
 
-        const isFocused = areAllAuthorFieldValid || isAnyAuthorFieldInvalid;
-
-
+      const isFocused = areAllAuthorFieldValid || isAnyAuthorFieldInvalid;
       return (
         <>
           {statusCode === 204 && (
@@ -260,9 +269,9 @@ const CreateBlog = () => {
                           />
                           <div className="flex flex-col items-center w-full">
                             <img src={UploadImg} />
-                            <div class="flex gap-1">
+                            <div className="flex gap-1">
                               <p>ჩააგდეთ ფაილი აქ ან </p>
-                              <p class="font-medium underline"> აირჩიეთ ფაილი</p>
+                              <p className="font-medium underline"> აირჩიეთ ფაილი</p>
                             </div>
                           </div>
                         </div>
@@ -301,13 +310,13 @@ const CreateBlog = () => {
                                 : areAllAuthorFieldValid
                                   ? "border-green-500 bg-[#F8FFF8]"
                                 : "#c3c2c8"
-                            } border-[#c3c2c8] rounded-2xl px-[15px] py-[16px] outline-none
-                            ${!isFocused ? "focus:border-[#5D37F3]" : ""} ${
-                              isAnyAuthorFieldInvalid
-                                ? "shakeAnimation"
-                                : ""
-                            }`}
-                            onChange={handleTextInputChange}
+                              } border-[#c3c2c8] rounded-2xl px-[15px] py-[16px] outline-none
+                              ${!isFocused ? "focus:border-[#5D37F3]" : ""} ${
+                                isAnyAuthorFieldInvalid
+                                  ? "shakeAnimation"
+                                  : ""
+                              }`}
+                              onChange={handleTextInputChange}
                           />
                         </div>
                         <ul className="font-small text-[13px] list-disc list-inside md:text-15px">
