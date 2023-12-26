@@ -31,7 +31,6 @@ export const AppProvider = ({ children }) => {
   const getBlogs = async () => {
     try {
       const response = await axiosClient.get("/blogs");
-      console.log(response);
       setBlogs(response.data.data);
     } catch (error) {
       console.error("Error fetching data: ", error);
@@ -48,7 +47,6 @@ export const AppProvider = ({ children }) => {
         const response = await axios.get(
           "https://api.blog.redberryinternship.ge/api/categories"
         );
-        console.log(response.data.data);
         setCategories(response.data.data);
       } catch (error) {
         console.error("Error fetching data: ", error);
@@ -71,7 +69,6 @@ export const AppProvider = ({ children }) => {
           },
         }
       );
-      console.log("Login successful:", response);
 
       if (response.status === 204) {
         setIsLogged("isLogged");
