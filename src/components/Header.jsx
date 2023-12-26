@@ -7,21 +7,20 @@ const Header = ({ openModal }) => {
   const {isLogged} = useGlobalContext();
   const navigate = useNavigate()
   return (
-    <div className="flex items-center justify-between bg-white px-24 py-8">
+    <div className="flex items-center justify-between bg-white px-[30px] md:px-14 py-8 2xl:px-24">
       <a href="/">
-      <img src={RedberryLogo} alt="Redberry Logo" />
+      <img src={RedberryLogo} alt="Redberry Logo" className="w-[100px] md:w-auto" />
       </a>
       {isLogged === "isLogged" ? (
         <button
-          className="bg-[#5D37F3] rounded-md px-[20px] py-[10px] text-white text-[14px]"
+          className="bg-[#5D37F3] rounded-md px-3 py-2 md:px-[20px] md:py-[10px] text-white text-[14px]"
           onClick={() => navigate("/create-blog")}
-
         >
           დაამატე ბლოგი
         </button>
       ) : isLogged === "isNotLogged" || isLogged === "" ? (
         <button
-          className="bg-[#5D37F3] rounded-md px-[20px] py-[10px] text-white text-[14px]"
+          className="bg-[#5D37F3] rounded-md px-3 py-2 md:px-[20px] md:py-[10px] text-white text-[14px]"
           onClick={openModal}
         >
           შესვლა

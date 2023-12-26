@@ -15,7 +15,7 @@ const BlogCart = ({
     id,
   }) => {
   return (
-    <div className="flex flex-col gap-4 w-[408px]">
+    <div className="flex flex-col gap-4 w-full lg:w-[450px] xl:w-[550px] 2xl:w-[480px]">
       <Link to={`/blog/${id}`}>
         <img src={img} className="w-full h-[328px] rounded-xl" alt={name} />
       </Link>
@@ -34,7 +34,7 @@ const BlogCart = ({
           />
         ))}
       </div>
-      <p className="text-[#404049] font-[400] text-[16px] leading-[28px] overflow-hidden line-clamp-3 h-[56px]">
+      <p className="text-[#404049] font-[400] text-[16px] leading-[28px] overflow-hidden line-clamp-3 h-auto lg:h-[56px]">
         {description}
       </p>
       <Link

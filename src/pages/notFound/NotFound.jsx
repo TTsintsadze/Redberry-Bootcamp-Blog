@@ -9,7 +9,7 @@ const NotFound = () => {
 
   return (
     <motion.div
-      className="min-w-[1920px] h-[1080px] bg-[#E4E3EB] flex flex-col justify-center"
+      className="max-w-[1920px] h-[1080px] bg-[#E4E3EB] flex flex-col justify-center"
       variants={animations}
       initial="initial"
       animate="animate"
@@ -18,7 +18,7 @@ const NotFound = () => {
     >
       <Header />
       <div className="w-full flex justify-center items-center h-full flex-col gap-6">
-        <h2 className="text-[32px] font-bold leading-[38px] w-[800px] text-center">
+        <h2 className="text-[32px] font-bold leading-[38px] w-[800px] text-center]">
           თქვენ არ ხართ დალოგინებული და არ გაქვთ ბლოგის შექმნის უფლება.
         </h2>
         <Link to="/">

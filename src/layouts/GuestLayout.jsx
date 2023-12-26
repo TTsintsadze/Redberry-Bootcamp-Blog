@@ -19,6 +19,21 @@ const GuestLayout = ({ children }) => {
         setShowModal(false);
     };
 
+    const handleLogin = () => {
+        if (email.endsWith("@redberry.ge")) {
+          loginUser(email);
+        } else {
+          console.log("Email should end with @redberry.ge");
+        }
+      };
+
+      const isInvalidEmail = !email.endsWith("@redberry.ge");
+
+      const buttonStyles = {
+        backgroundColor: isInvalidEmail ? "#CCCCCC" : "#5D37F3",
+        cursor: isInvalidEmail ? "not-allowed" : "pointer",
+      };
+
     return (
         <>
             <Modal showModal={showModal} setShowModal={closeModal} error={isLogged}>
@@ -56,7 +71,9 @@ const GuestLayout = ({ children }) => {
                                 <button
                                     type="button"
                                     className="bg-[#5D37F3] rounded-xl w-full text-white py-[12px]"
-                                    onClick={() => loginUser(email)}
+                                    style={buttonStyles}
+                                    onClick={() => handleLogin()}
+                                    disabled={isInvalidEmail}
                                 >
                                     შესვლა
                                 </button>
@@ -85,7 +102,7 @@ const GuestLayout = ({ children }) => {
                 </AnimatePresence>
             </Modal>
             <motion.div
-                className="min-w-[1920px] min-h-[1080px] bg-[#F3F2FA] flex flex-col gap-12"
+                className="max-w-[1920px] min-h-[1080px] bg-[#F3F2FA] flex flex-col gap-12"
                 variants={animations}
                 initial="initial"
                 animate="animate"

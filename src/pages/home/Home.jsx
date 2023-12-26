@@ -51,11 +51,13 @@ const Home = () => {
   return (
    
     <GuestLayout>
-    <div className="flex px-24 py-8 justify-between items-center">
-      <h1 className="text-[74px] font-bold">ბლოგი</h1>
-      <img src={HomeImg} className="w-[624px] h-[350px]" />
+    <div className="flex-col flex px-[10px] py-8 justify-between lg:flex-row items-center md:px-14 2xl:px-24">
+        <h1 className="text-[60px] font-bold 2xl:text-[74px]">
+          ბლოგი
+        </h1>
+        <img src={HomeImg} className="h-[350px]" />
     </div>
-    <div className="px-24 py-8  flex justify-center ">
+    <div className="px-24 py-8  flex justify-center px-[30px] md:px-14 2xl:px-24">
     <HorizontalScroll className="w-[684px] flex gap-[22px] horizontal-scroll overflow-hidden">
          
          {categories.map((option) => (

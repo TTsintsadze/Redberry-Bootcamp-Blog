@@ -57,6 +57,44 @@ const CreateBlog = () => {
             [field]: selectedOption,
         }));
     };
+
+    const makeBlog = async () => {
+      try {
+        const formData = new FormData();
+        formData.append("title", info.title);
+        formData.append("description", info.description);
+        formData.append("author", info.author);
+        formData.append("publish_date", info.publish_date);
+        formData.append("email", info.email);
+        const categoryIds = info.categories
+          .map((category) => category.id)
+          .join(",");
+        formData.append("categories", `[${categoryIds}]`);
+        const response = await fetch(info.image.url);
+        const blob = await response.blob();
+        formData.append("image", blob, info.image.url);
+        const blogResponse = await axiosClient.post("/blogs", formData);
+        if (blogResponse.status === 204) {
+          setShowModal(true);
+          setStatusCode(blogResponse.status);
+          setValidationErrors({})
+          setStore({
+            title: "",
+            description: "",
+            image: {},
+            author: "",
+            publish_date: "",
+            categories: [],
+            email: "",
+          });
+          getBlogs();
+        }
+        console.log("Blog created successfully:", blogResponse);
+      } catch (error) {
+        console.error("Error creating blog:", error);
+      }
+    };
+
     const validateForm = () => {
         const errors = ValidateBlog(info);
         makeBlog()
@@ -150,55 +188,6 @@ const CreateBlog = () => {
         checkFormValidity();
     }, [validationErrors, info]);
 
-    const makeBlog = async (email) => {
-        try {
-          const formData = new FormData();
-          formData.append("title", info.title);
-          formData.append("description", info.description);
-          formData.append("author", info.author);
-          formData.append("publish_date", info.publish_date);
-          formData.append("email", info.email);
-          const categoryIds = info.categories
-            .map((category) => category.id)
-            .join(",");
-          formData.append("categories", `[${categoryIds}]`);
-
-          const response = await fetch(info.image.url);
-          const blob = await response.blob();
-          formData.append("image", blob, info.image.url);
-
-          const blogResponse = await axios.post(
-            "https://api.blog.redberryinternship.ge/api/blogs",
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${"7a2b6b3d3f9a5370396c63aebe6118f45bd44e89337ae5206457b71256c5c1a5"}`,
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-          if (blogResponse.status === 204) {
-            setShowModal(true);
-            setStatusCode(blogResponse.status);
-             setStore((prevInfo) => ({
-               ...prevInfo,
-               title: "",
-               description: "",
-               image: {},
-               author: "",
-               publish_date: "",
-               categories: [],
-               email: "",
-             }));
-             setValidationErrors({})
-             getBlogs()
-          }
-          console.log("Blog created successfully:", blogResponse);
-        } catch (error) {
-          console.error("Error creating blog:", error);
-        }
-      };
-
       const areAllAuthorFieldValid =
         validationErrors.author &&
         Object.values(validationErrors.author).every(
@@ -242,7 +231,7 @@ const CreateBlog = () => {
           )}
     
             <motion.div
-                className="min-w-[1920px] min-h-[1080px] bg-[#FBFAFF] flex flex-col gap-12"
+                className="max-w-[1920px] min-h-[1080px] bg-[#FBFAFF] flex flex-col gap-12"
                 variants={animations}
                 initial="initial"
                 animate="animate"
@@ -250,10 +239,10 @@ const CreateBlog = () => {
                 transition={{ duration: 0.3 }}
             >
             <div className="flex items-center justify-center bg-white px-24 py-8">
-              <img src={RedberryLogo} />
+              <img src={RedberryLogo} className="w-[100px] md:w-auto" />
             </div>
-            <div className="px-24 py-8 flex">
-              <Link to="/">
+            <div className="px-[10px] py-8 flex md:px-24">
+              <Link to="/" className="hidden lg:block">
                 <button
                   className={`bg-[#FFFFFF] h-[44px] w-[44px] rounded-full flex items-center justify-center`}
                 >
@@ -298,7 +287,7 @@ const CreateBlog = () => {
                         </button>
                       </div>
                     )}
-                    <div className="flex gap-8">
+                    <div className="flex gap-8 flex-col md:flex-row">
                       <div className="flex flex-col gap-3 w-full ">
                         <label
                           className={`font-bold text-[14px] text-[#1A1A1F] ${
@@ -385,7 +374,7 @@ const CreateBlog = () => {
                       changeHandler={handleTextInputChange}
                       validation={validationErrors?.description}
                     />
-                    <div className="flex gap-8 items-center">
+                    <div className="flex-col flex gap-8 items-center md:flex-row">
                       <InputGroup
                         label="გამოქვეყნების თარიღი *"
                         type="date"
@@ -400,7 +389,6 @@ const CreateBlog = () => {
                         </p>
                         <MultiSelectDropdown
                           label="პოზიცია"
-                          //   value={info?.position?.label}
                           handleChange={(selectedOption) =>
                             handleSelect(selectedOption, "position")
                           }
@@ -408,7 +396,7 @@ const CreateBlog = () => {
                         />
                       </div>
                     </div>
-                    <div className="w-1/2 pr-4">
+                    <div className="w-full md:pr-4 md:w-1/2">
                       <InputGroup
                         label="ელ-ფოსტა *"
                         type="text"
@@ -422,7 +410,7 @@ const CreateBlog = () => {
                     </div>
                     <div className="flex justify-end mt-10">
                       <button
-                        className={`bg-[#E4E3EB] rounded-md text-white px-10 py-3 ${
+                        className={`bg-[#E4E3EB] rounded-md text-white px-3 md:px-10 py-3 ${
                           formValid
                             ? "cursor-pointer"
                             : "cursor-not-allowed opacity-50"
