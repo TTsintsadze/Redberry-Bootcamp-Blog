@@ -1,8 +1,8 @@
-import React from 'react'
-import Header from '../../components/Header';
-import { Link } from 'react-router-dom';
+import React from "react";
+import Header from "../../components/Header";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useGlobalContext } from '../../context/Context';
+import { useGlobalContext } from "../../context/Context";
 
 const NotFound = () => {
   const { animations } = useGlobalContext();

@@ -1,15 +1,19 @@
-import React from 'react'
-import RedberryLogo from '../assets/redberry_logo.png'
-import { useGlobalContext } from '../context/Context';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import RedberryLogo from "../assets/redberry_logo.png";
+import { useGlobalContext } from "../context/Context";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ openModal }) => {
-  const {isLogged} = useGlobalContext();
-  const navigate = useNavigate()
+  const { isLogged } = useGlobalContext();
+  const navigate = useNavigate();
   return (
     <div className="flex items-center justify-between bg-white px-[30px] md:px-14 py-8 2xl:px-24">
       <a href="/">
-      <img src={RedberryLogo} alt="Redberry Logo" className="w-[100px] md:w-auto" />
+        <img
+          src={RedberryLogo}
+          alt="Redberry Logo"
+          className="w-[100px] md:w-auto"
+        />
       </a>
       {isLogged === "isLogged" ? (
         <button
@@ -30,4 +34,4 @@ const Header = ({ openModal }) => {
   );
 };
 
-export default Header
+export default Header;

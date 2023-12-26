@@ -4,16 +4,15 @@ import { Link } from "react-router-dom";
 import CategoryButton from "./CategoryButton";
 import HorizontalScroll from "./HorizontalScroll";
 
-
 const BlogCart = ({
-    name,
-    date,
-    announcement,
-    description,
-    img,
-    categories = [],
-    id,
-  }) => {
+  name,
+  date,
+  announcement,
+  description,
+  img,
+  categories = [],
+  id,
+}) => {
   return (
     <div className="flex flex-col gap-4 w-full lg:w-[450px] xl:w-[550px] 2xl:w-[480px]">
       <Link to={`/blog/${id}`}>
@@ -22,7 +21,7 @@ const BlogCart = ({
       <p className="text-[16px] leading-[20px]">{name}</p>
       <p className="font-small text-[#85858D]">{date}</p>
       <HorizontalScroll className="flex gap-3 overflow-hidden">
-      {announcement}
+        {announcement}
       </HorizontalScroll>
       <div className="flex gap-3">
         {categories.map((category, index) => (
@@ -46,6 +45,6 @@ const BlogCart = ({
       </Link>
     </div>
   );
-}
+};
 
 export default BlogCart;

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import CloseIcon from '../assets/close.png'
+import CloseIcon from "../assets/close.png";
 
 const Modal = ({ showModal, setShowModal, children }) => {
   const backdrop = {
@@ -16,7 +16,6 @@ const Modal = ({ showModal, setShowModal, children }) => {
     hidden: { opacity: 0, scale: 0.8 },
     visible: { opacity: 1, scale: 1, transition: { delay: 0.2 } },
   };
-  
 
   return (
     <AnimatePresence exitBeforeEnter={false}>
@@ -34,10 +33,10 @@ const Modal = ({ showModal, setShowModal, children }) => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)", 
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
             display: "flex",
             alignItems: "center",
-            zIndex:40,
+            zIndex: 40,
             justifyContent: "center",
           }}
         >
@@ -54,9 +53,9 @@ const Modal = ({ showModal, setShowModal, children }) => {
               width: "480px",
               textAlign: "center",
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
-              zIndex: 10, 
+              zIndex: 10,
             }}
-            onClick={(e) => e.stopPropagation()} 
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-end" onClick={closeModal}>
               <img src={CloseIcon} />

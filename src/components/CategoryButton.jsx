@@ -10,7 +10,11 @@ const CategoryButton = ({ text, bgColor, textColor }) => {
     whiteSpace: "nowrap",
   };
 
-  return <button style={buttonStyle} className="" type="button">{text}</button>;
+  return (
+    <button style={buttonStyle} className="" type="button">
+      {text}
+    </button>
+  );
 };
 
 export default CategoryButton;

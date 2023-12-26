@@ -1,75 +1,73 @@
-import React, { useEffect, useState } from 'react'
-import CategoryButton from '../../components/CategoryButton';
-import ArrowIcon from '../../assets/Arrow-2.svg'
-import ArrowIcon2 from '../../assets/Arrow-3.svg'
-import BlogCart from '../../components/BlogCart';
+import React, { useEffect, useState } from "react";
+import CategoryButton from "../../components/CategoryButton";
+import ArrowIcon from "../../assets/Arrow-2.svg";
+import ArrowIcon2 from "../../assets/Arrow-3.svg";
+import BlogCart from "../../components/BlogCart";
 import { Swiper, SwiperSlide } from "swiper/react";
-import axiosClient from '../../config/axiosClient';
+import axiosClient from "../../config/axiosClient";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/free-mode";
 import { FreeMode } from "swiper/modules";
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from "react-router-dom";
 import GuestLayout from "../../layouts/GuestLayout";
-import HorizontalScroll from '../../components/HorizontalScroll';
-import { useGlobalContext } from '../../context/Context';
+import HorizontalScroll from "../../components/HorizontalScroll";
+import { useGlobalContext } from "../../context/Context";
 
 const Blog = () => {
-    const [swiper, setSwiper] = useState(null);
-    const [singleBlog, setSingleBlog] = useState({});
-    const { id } = useParams();
-    const { blogs} = useGlobalContext();
-    const goToNextSlide = () => {
-      if (swiper !== null) {
-        swiper.slideNext();
+  const [swiper, setSwiper] = useState(null);
+  const [singleBlog, setSingleBlog] = useState({});
+  const { id } = useParams();
+  const { blogs } = useGlobalContext();
+  const goToNextSlide = () => {
+    if (swiper !== null) {
+      swiper.slideNext();
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosClient.get(`/blogs/${id}`);
+        setSingleBlog(response.data);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
       }
     };
 
+    fetchData();
+  }, [id, blogs]);
 
-     useEffect(() => {
-       const fetchData = async () => {
-         try {
-           const response = await axiosClient.get(`/blogs/${id}`);
-           setSingleBlog(response.data);
-         } catch (error) {
-           console.error("Error fetching data: ", error);
-         }
-       };
+  const goToPrevSlide = () => {
+    if (swiper !== null) {
+      swiper.slidePrev();
+    }
+  };
 
-       fetchData();
-    }, [id, blogs]);
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
 
-    const goToPrevSlide = () => {
-      if (swiper !== null) {
-        swiper.slidePrev();
-      }
-    };
-
-    const [filteredBlogs, setFilteredBlogs] = useState([]);
-
-    useEffect(() => {
-      if (singleBlog.categories && singleBlog.categories.length > 0) {
-        const filtered = blogs.filter(
-          (item) =>
-            item.id !== singleBlog.id &&
-            item.categories.some((blogCat) =>
-              singleBlog.categories.some(
-                (selectedCat) => blogCat.id === selectedCat.id
-              )
+  useEffect(() => {
+    if (singleBlog.categories && singleBlog.categories.length > 0) {
+      const filtered = blogs.filter(
+        (item) =>
+          item.id !== singleBlog.id &&
+          item.categories.some((blogCat) =>
+            singleBlog.categories.some(
+              (selectedCat) => blogCat.id === selectedCat.id
             )
-        );
-        setFilteredBlogs(filtered);
-      }
-    }, [singleBlog.categories, singleBlog.id, blogs]);
+          )
+      );
+      setFilteredBlogs(filtered);
+    }
+  }, [singleBlog.categories, singleBlog.id, blogs]);
 
-    const [isBeginning, setIsBeginning] = useState(true);
-    const [isEnd, setIsEnd] = useState(false);
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
 
-    const handleSlideChange = (swiper) => {
-      setIsBeginning(swiper.isBeginning);
-      setIsEnd(swiper.isEnd);
-    };
-
+  const handleSlideChange = (swiper) => {
+    setIsBeginning(swiper.isBeginning);
+    setIsEnd(swiper.isEnd);
+  };
 
   return (
     <GuestLayout>
@@ -83,7 +81,10 @@ const Blog = () => {
         </Link>
         <div className="w-full justify-center flex ">
           <div className="w-[820px] flex flex-col gap-4">
-          <img src={singleBlog.image} className="w-full rounded-xl h-[328px]" />
+            <img
+              src={singleBlog.image}
+              className="w-full rounded-xl h-[328px]"
+            />
             <p className="text-[16px] font-medium">{singleBlog.author}</p>
             <p className="font-small text-[#85858D] ">
               {singleBlog.publish_date && singleBlog?.email ? (
@@ -125,7 +126,7 @@ const Blog = () => {
               className={`h-[44px] w-[44px] rounded-full flex items-center justify-center `}
               onClick={goToPrevSlide}
               style={{
-                backgroundColor: `${isBeginning? "#E4E3EB" : "#5D37F3"}`,
+                backgroundColor: `${isBeginning ? "#E4E3EB" : "#5D37F3"}`,
               }}
             >
               <img
@@ -167,26 +168,26 @@ const Blog = () => {
           >
             {filteredBlogs.map((blog, index) => (
               <SwiperSlide key={blog.id}>
-              <div className="flex justify-center">
-                {" "}
-                <BlogCart
-                  key={blog.id}
-                  name={blog.author}
-                  date={blog.publish_date}
-                  img={blog.image}
-                  announcement={blog.title}
-                  description={blog.description}
-                  categories={blog.categories}
-                  id={blog.id}
-                />
-              </div>
-            </SwiperSlide>
+                <div className="flex justify-center">
+                  {" "}
+                  <BlogCart
+                    key={blog.id}
+                    name={blog.author}
+                    date={blog.publish_date}
+                    img={blog.image}
+                    announcement={blog.title}
+                    description={blog.description}
+                    categories={blog.categories}
+                    id={blog.id}
+                  />
+                </div>
+              </SwiperSlide>
             ))}
           </Swiper>
         </div>
       </div>
     </GuestLayout>
   );
-}
+};
 
-export default Blog
+export default Blog;

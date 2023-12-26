@@ -15,23 +15,21 @@ export const ValidateBlog = (values) => {
 
   if (!values?.author || values?.author.trim().length < 4) {
     response.author.tooShort = "invalid";
-  }else{
+  } else {
     response.author.tooShort = "valid";
   }
 
   if (wordCount < 2) {
     response.author.twoWord = "invalid";
-  }else{
+  } else {
     response.author.twoWord = "valid";
   }
 
   if (!REGEX_NAME.test(values?.author)) {
     response.author.georgianChars = "invalid";
-  }else{
+  } else {
     response.author.georgianChars = "valid";
   }
-  
-
 
   if (!values?.title || values?.title.length < 2) {
     response.title = "invalid";
@@ -39,13 +37,11 @@ export const ValidateBlog = (values) => {
     response.title = "valid";
   }
 
-
   if (!values?.description || values?.description.length < 2) {
     response.description = "invalid";
   } else {
     response.description = "valid";
   }
-
 
   if (values.email !== undefined) {
     const trimmedEmail = values.email.trim();
@@ -70,11 +66,11 @@ export const ValidateBlog = (values) => {
     response.categories = "invalid";
   }
 
-   if (!values?.image || !values?.image.url) {
-     response.image = "invalid";
-   } else {
-     response.image = "valid";
-   }
+  if (!values?.image || !values?.image.url) {
+    response.image = "invalid";
+  } else {
+    response.image = "valid";
+  }
 
   return response;
 };

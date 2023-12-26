@@ -34,13 +34,13 @@ const InputGroup = ({
               : isValid == "valid"
               ? "border-green-500"
               : "#c3c2c8"
-            } border-[#c3c2c8] rounded-2xl px-[15px] py-[16px] outline-none
+          } border-[#c3c2c8] rounded-2xl px-[15px] py-[16px] outline-none
             ${isValid == "valid" ? "bg-[#F8FFF8]" : ""} ${
-              isFocused ? "focus:border-[#5D37F3]" : ""
-            } ${isValid === "invalid" ? "shakeAnimation" : ""} `}
-            onChange={changeHandler}
+            isFocused ? "focus:border-[#5D37F3]" : ""
+          } ${isValid === "invalid" ? "shakeAnimation" : ""} `}
+          onChange={changeHandler}
         />
-        { }
+        {}
       </div>
 
       <p
