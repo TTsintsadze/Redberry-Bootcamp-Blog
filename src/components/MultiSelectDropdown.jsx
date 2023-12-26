@@ -21,7 +21,7 @@ const MultiSelectDropdown = ({ className = "", isValid }) => {
     transition: "max-height 0.3s ease-in-out, opacity 0.3s ease-in-out",
   };
 
-  const handleOptionClick = (option) => {
+  const handleOptionClick = async (option) => {
     if (!info.categories.includes(option)) {
       setStore((prevInfo) => ({
         ...prevInfo,
@@ -36,7 +36,7 @@ const MultiSelectDropdown = ({ className = "", isValid }) => {
       }));
     }
   };
-  const handleDeleteOption = (option) => {
+  const handleDeleteOption = async (option) => {
     const updatedOptions = info.categories.filter((opt) => opt !== option);
 
     setStore((prevInfo) => ({
