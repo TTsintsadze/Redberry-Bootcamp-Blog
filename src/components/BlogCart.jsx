@@ -23,7 +23,7 @@ const BlogCart = ({
       <HorizontalScroll className="flex gap-3 overflow-hidden">
         {announcement}
       </HorizontalScroll>
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         {categories.map((category, index) => (
           <CategoryButton
             key={index}

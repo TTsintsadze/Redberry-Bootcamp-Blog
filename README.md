@@ -1,8 +1,12 @@
-# React + Vite
+# Redberry Bootcamp Blog
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Screenshots
 
-Currently, two official plugins are available:
+  <img src="./src/assets/screen.png" alt="Screen Image">
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Links
+
+- Solution URL: [GitHub Code](https://github.com/TTsintsadze/Redberry-Bootcamp-Blog)
+- Live Site URL: [Live Site](https://redberry-bootcamp-blog.vercel.app/)
+
+
