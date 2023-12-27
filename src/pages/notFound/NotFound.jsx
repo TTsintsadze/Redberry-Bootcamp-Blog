@@ -23,7 +23,7 @@ const NotFound = () => {
         </h2>
         <Link to="/">
           <button className="bg-[#5D37F3] rounded-md  h-[50px] text-white text-[25px] px-6">
-            მთავარ გვერდე დაბრუნება
+            მთავარ გვერდძე დაბრუნება
           </button>
         </Link>
       </div>
